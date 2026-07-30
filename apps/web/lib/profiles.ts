@@ -1,15 +1,18 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { DEMO_PROFILES } from '@signet/types';
 
 /**
  * Single source of truth for profile data.
  *
- * Reads the curated static manifest in `public/data/`. This is what powers the
- * canonical `/p/{handle}` profile route. It has no database dependency, so it
- * works in every environment (preview, prod, offline) without provisioning.
+ * The curated demo manifest comes from `@signet/types` (`DEMO_PROFILES`) — the
+ * one shared source the indexer seed (`apps/indexer/src/seed-data.ts`) also
+ * derives from, so demo addresses live in exactly one place. It has no database
+ * dependency, so it works in every environment (preview, prod, offline) without
+ * provisioning.
  *
  * When the indexer + Postgres come online (Phase 2), `getProfile` can try the
- * database first and fall back to the static manifest — see `safeDbProfile`.
+ * database first and fall back to this static manifest — see `safeDbProfile`.
  */
 
 export type Profile = {
@@ -40,6 +43,11 @@ export type Operation = {
 
 const DATA_DIR = path.join(process.cwd(), 'public/data');
 
+/** The curated demo manifest, keyed by handle, built from the shared source. */
+const DEMO_MANIFEST: Record<string, Profile> = Object.fromEntries(
+  DEMO_PROFILES.map((p) => [p.handle, { name: p.name, wallet: p.wallet, bio: p.bio, joined: p.joined }]),
+);
+
 /** A handle is 1–32 chars of `[a-z0-9_-]` — mirrors the on-chain registry. */
 const HANDLE_RE = /^[a-z0-9_-]{1,32}$/;
 
@@ -62,8 +70,7 @@ export async function getProfile(handle: string): Promise<Profile | null> {
   // returns null whenever there's no DB, so this is a no-op until provisioned.
   const fromDb = await safeDbProfile(handle);
   if (fromDb) return fromDb;
-  const manifest = await readJson<Record<string, Profile>>('profiles.json');
-  return manifest?.[handle] ?? null;
+  return DEMO_MANIFEST[handle] ?? null;
 }
 
 export async function getOperations(handle: string): Promise<Operation[]> {
@@ -101,8 +108,7 @@ export function computeStats(operations: Operation[]): ProfileStats {
 }
 
 export async function listHandles(): Promise<string[]> {
-  const manifest = await readJson<Record<string, Profile>>('profiles.json');
-  return manifest ? Object.keys(manifest) : [];
+  return Object.keys(DEMO_MANIFEST);
 }
 
 /**
