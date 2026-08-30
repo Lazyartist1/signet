@@ -261,9 +261,36 @@ attestation worker queries Soroban events for that contract.
 
 ---
 
+## 8. Profile 404s or shows archived after ~30 days of inactivity
+
+**Symptom**
+
+A previously claimed handle appears unavailable or displays an archival banner indicating its persistent entry has expired.
+
+**Cause**
+
+Soroban smart contracts enforce a Time-To-Live (TTL) of ~30 days on persistent storage entries. If a handle is not queried or modified within that window, its entry moves into cold archived storage.
+
+**Fix**
+
+Restore the binding footprint via the web app or Stellar CLI, or run the keep-alive sweep script:
+
+```bash
+# Keep-alive sweep to bump active bindings
+node scripts/keepalive-contract.mjs
+
+# Detailed runbook:
+# See docs/ARCHIVAL_AND_RESTORATION.md
+```
+
+See [`docs/ARCHIVAL_AND_RESTORATION.md`](ARCHIVAL_AND_RESTORATION.md) for full restoration procedures.
+
+---
+
 ## Related docs
 
 - [README — Run locally](../README.md#run-locally)
 - [`.env.example`](../.env.example)
+- [`docs/ARCHIVAL_AND_RESTORATION.md`](ARCHIVAL_AND_RESTORATION.md)
 - [`packages/contracts/README.md`](../packages/contracts/README.md)
 - [`infra/README.md`](../infra/README.md)

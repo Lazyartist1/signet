@@ -44,6 +44,7 @@ export type Profile = {
   bio: string;
   joined: string;
   source: ProfileSource;
+  archived?: boolean;
 };
 
 export type Operation = {
@@ -304,6 +305,19 @@ export async function safeChainProfile(handle: string): Promise<Profile | null> 
       .build();
 
     const sim = await server.simulateTransaction(tx);
+    if (
+      rpc.Api.isSimulationRestorePreamble(sim) ||
+      (typeof sim === 'object' && sim !== null && 'restorePreamble' in sim && (sim as any).restorePreamble)
+    ) {
+      return {
+        name: handle,
+        wallet: '',
+        bio: 'This on-chain binding is currently archived due to ~30 days of inactivity. It can be restored on-chain via RestoreFootprint.',
+        joined: '',
+        source: 'chain',
+        archived: true,
+      };
+    }
     if (rpc.Api.isSimulationError(sim) || !sim.result) return null;
 
     const wallet = decodeResolvedAddress(scValToNative(sim.result.retval));

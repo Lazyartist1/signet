@@ -71,3 +71,55 @@ export async function claimHandle(handle: string, walletAddress: string): Promis
 
   return { hash: sent.hash };
 }
+
+export interface RestoreResult {
+  hash: string;
+}
+
+/** Restore archived storage footprint for `handle` using the connected `walletAddress`. */
+export async function restoreHandleBinding(
+  handle: string,
+  walletAddress: string,
+): Promise<RestoreResult> {
+  if (!isRegistryConfigured()) throw new RegistryNotConfiguredError();
+
+  const sdk: any = await import('@stellar/stellar-sdk');
+  const { Contract, Operation, TransactionBuilder, BASE_FEE, nativeToScVal, rpc } = sdk;
+
+  const server = new rpc.Server(RPC_URL, { allowHttp: RPC_URL.startsWith('http://') });
+  const account = await server.getAccount(walletAddress);
+  const contract = new Contract(CONTRACT_ID);
+
+  const resolveTx = new TransactionBuilder(account, {
+    fee: BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(contract.call('resolve', nativeToScVal(handle, { type: 'string' })))
+    .setTimeout(60)
+    .build();
+
+  const sim = await server.simulateTransaction(resolveTx);
+  if (!rpc.Api.isSimulationRestorePreamble(sim) && !sim?.restorePreamble) {
+    throw new Error(`Handle '${handle}' is not in an archived state.`);
+  }
+
+  const restoreOp = Operation.restoreFootprint({});
+  const restoreTx = new TransactionBuilder(account, {
+    fee: BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(restoreOp)
+    .setTimeout(60)
+    .build();
+
+  const prepared = await server.prepareTransaction(restoreTx);
+  const signedXdr = await signTransaction(prepared.toXDR(), walletAddress);
+  const signedTx = TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE);
+
+  const sent = await server.sendTransaction(signedTx);
+  if (sent.status === 'ERROR') {
+    throw new Error(`Restore submission failed: ${JSON.stringify(sent.errorResult ?? sent)}`);
+  }
+
+  return { hash: sent.hash };
+}
