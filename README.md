@@ -169,6 +169,7 @@ set from the event stream.
 | `packages/db` | Prisma schema + generated client |
 | `packages/sdk` | External SDK for integrators |
 | `packages/types` | Shared TypeScript types |
+| `cli` | `signet` CLI (Go) — links wallets, manages keys, talks to a Signet deployment |
 | `infra` | Local dev infra (Docker Postgres) |
 
 ## Scripts
@@ -183,6 +184,7 @@ set from the event stream.
 | `pnpm db:migrate` | Run Prisma migrations |
 | `pnpm test` | All TypeScript tests via Turborepo |
 | `cargo test` (in `packages/contracts`) | Identity Registry unit tests |
+| `go build ./...` / `go test ./...` (in `cli`) | Build / test the `signet` CLI |
 
 ## Tests
 
