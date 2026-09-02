@@ -16,13 +16,13 @@ PATCH (0.0.X) -> Backwards-compatible bug fixes, security patches, internal refa
 
 ### Monorepo Scope Breakdown
 
-| Component | Scope | Version Reference | Version Impact |
-| --- | --- | --- | --- |
-| **`@signet/sdk`** | External TypeScript SDK | `packages/sdk/package.json` | Published to npm registry; breaking changes bump `MAJOR` |
-| **`identity-registry`** | Soroban Rust contract | `packages/contracts/identity-registry/Cargo.toml` | On-chain bytecode deployed to permanent addresses; requires migration runbook if storage format changes |
-| **`@signet/web`** | Next.js frontend & tRPC API | `apps/web/package.json` | Web application deployment; tracks overall platform release |
-| **`@signet/indexer`** | Ingestion worker | `apps/indexer/package.json` | Background worker syncing events to Postgres |
-| **`@signet/types`** | Shared type definitions | `packages/types/package.json` | Internal workspace dependency |
+| Component               | Scope                       | Version Reference                                 | Version Impact                                                                                          |
+| ----------------------- | --------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **`@signet/sdk`**       | External TypeScript SDK     | `packages/sdk/package.json`                       | Published to npm registry; breaking changes bump `MAJOR`                                                |
+| **`identity-registry`** | Soroban Rust contract       | `packages/contracts/identity-registry/Cargo.toml` | On-chain bytecode deployed to permanent addresses; requires migration runbook if storage format changes |
+| **`@signet/web`**       | Next.js frontend & tRPC API | `apps/web/package.json`                           | Web application deployment; tracks overall platform release                                             |
+| **`@signet/indexer`**   | Ingestion worker            | `apps/indexer/package.json`                       | Background worker syncing events to Postgres                                                            |
+| **`@signet/types`**     | Shared type definitions     | `packages/types/package.json`                     | Internal workspace dependency                                                                           |
 
 ---
 
