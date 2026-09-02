@@ -5,6 +5,14 @@ on:
     branches: [main]
   pull_request:
 
+# One in-flight run per branch. Superseding only cancels on pull_request:
+# a run on `main` is the record of whether that merged commit is green, and
+# two merges landing close together would otherwise cancel the first commit's
+# run before it ever reported.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   docs:
     name: docs links · env · scripts
