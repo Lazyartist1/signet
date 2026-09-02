@@ -196,6 +196,11 @@ set from the event stream.
 Both are CI gates ([`ci.yml`](.github/workflows/ci.yml)), alongside `lint`,
 `typecheck`, `build` and the wasm contract build.
 
+## Releases and changelog
+
+- **[`CHANGELOG.md`](CHANGELOG.md)** — Record of notable changes, version history, and deployed contract addresses.
+- **[`docs/RELEASING.md`](docs/RELEASING.md)** — Release procedure, Semantic Versioning policy, and tagging conventions.
+
 ## License
 
 Signet is licensed under the Apache License 2.0 — see [`LICENSE`](LICENSE) for the
