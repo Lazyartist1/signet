@@ -31,11 +31,14 @@ Soroban smart contracts on Stellar manage ledger state through **Time-To-Live (T
 ## 2. Archival Impact & Resolution Behavior
 
 ### The Problem
+
 When an entry is in cold archived storage:
+
 - A standard simulation of `resolve(handle)` returns a `restorePreamble` containing the footprint rather than an immediate return value.
 - Without proper handling, reading the profile would fail or return `null`, causing `/p/{handle}` to 404 even though the handle is legitimate and recorded on-chain.
 
 ### Signet's Handling
+
 - **Detection**: `simulateReadDetailed` and `resolveHandleDetailed` in `apps/web/lib/server/registry-read.ts` detect `restorePreamble` in simulation responses.
 - **Graceful Rendering**: `safeChainProfile` in `apps/web/lib/profiles.ts` marks the profile with `archived: true` and informs visitors that the binding is in cold storage rather than returning a 404 error.
 - **User Restoration**: The web app provides client-side helper `restoreHandleBinding(handle, walletAddress)` in `apps/web/lib/registry.ts` which executes a `RestoreFootprint` transaction signed by the wallet.
@@ -45,12 +48,15 @@ When an entry is in cold archived storage:
 ## 3. How to Restore an Archived Handle Binding
 
 ### Method A: Client / Wallet via Web App
+
 Call `restoreHandleBinding(handle, walletAddress)` from `lib/registry.ts`:
+
 1. Simulates `resolve(handle)` to extract the storage footprint and fee requirements.
 2. Builds an `Operation.restoreFootprint({})` transaction.
 3. Requests wallet signature and submits the transaction to the Stellar network.
 
 ### Method B: Stellar CLI
+
 Operators can restore any archived contract data entry using the `stellar` CLI:
 
 ```bash

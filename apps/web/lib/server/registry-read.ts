@@ -118,9 +118,13 @@ export async function simulateReadDetailed(
     const sim = (await server.simulateTransaction(tx)) as rpc.Api.SimulateTransactionResponse;
     if (!sim) return { status: 'error' };
 
-    // Detect cold storage / archived footprint
-    if (typeof sim === 'object' && sim !== null && 'restorePreamble' in sim && Boolean((sim as any).restorePreamble)) {
-      return { status: 'archived', restorePreamble: (sim as any).restorePreamble };
+    // An archived persistent entry still simulates successfully — the network
+    // answers "as if" the entry were live and attaches a `restorePreamble`
+    // describing what to restore. `isSimulationRestore` is the SDK's guard for
+    // exactly that, and requires the preamble to carry `transactionData`, which
+    // is what a restore transaction has to adopt as its Soroban data.
+    if (rpc.Api.isSimulationRestore(sim)) {
+      return { status: 'archived', restorePreamble: sim.restorePreamble };
     }
 
     if (rpc.Api.isSimulationError(sim)) return { status: 'error' };

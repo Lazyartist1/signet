@@ -10,15 +10,15 @@ If your failure is not listed, open an issue with the full command and stderr.
 
 ## Quick table
 
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| `rpc-url is used but network passphrase is missing` | stellar CLI 25.2.0 `--network testnet` alias bug | Pass `--rpc-url` and `--network-passphrase` explicitly (see below) |
-| `stellar keys generate … --fund` fails / account unfunded | Friendbot via CLI flaky or blocked by the alias bug | Fund with Friendbot HTTP, then retry without `--fund` |
-| `pnpm install` / Next build fails on Node 18/20 | Engines require Node 22+ | Upgrade Node (`nvm use` / install 22); see `.nvmrc` |
-| `error: could not find native static library` / missing wasm target | `wasm32v1-none` not installed | `rustup target add wasm32v1-none` |
-| Web app needs Postgres? | No — demo routes are static | Run `pnpm --filter @signet/web dev` without `DATABASE_URL` |
-| Claim button shows "Phase 2" | `NEXT_PUBLIC_IDENTITY_REGISTRY_ID` unset | Set the deployed testnet contract id in `.env` |
-| Indexer starts but never attests claims | Registry id unset | Set `INDEXER_REGISTRY_CONTRACT_ID` or `NEXT_PUBLIC_IDENTITY_REGISTRY_ID` |
+| Symptom                                                             | Cause                                               | Fix                                                                      |
+| ------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------ |
+| `rpc-url is used but network passphrase is missing`                 | stellar CLI 25.2.0 `--network testnet` alias bug    | Pass `--rpc-url` and `--network-passphrase` explicitly (see below)       |
+| `stellar keys generate … --fund` fails / account unfunded           | Friendbot via CLI flaky or blocked by the alias bug | Fund with Friendbot HTTP, then retry without `--fund`                    |
+| `pnpm install` / Next build fails on Node 18/20                     | Engines require Node 22+                            | Upgrade Node (`nvm use` / install 22); see `.nvmrc`                      |
+| `error: could not find native static library` / missing wasm target | `wasm32v1-none` not installed                       | `rustup target add wasm32v1-none`                                        |
+| Web app needs Postgres?                                             | No — demo routes are static                         | Run `pnpm --filter @signet/web dev` without `DATABASE_URL`               |
+| Claim button shows "Phase 2"                                        | `NEXT_PUBLIC_IDENTITY_REGISTRY_ID` unset            | Set the deployed testnet contract id in `.env`                           |
+| Indexer starts but never attests claims                             | Registry id unset                                   | Set `INDEXER_REGISTRY_CONTRACT_ID` or `NEXT_PUBLIC_IDENTITY_REGISTRY_ID` |
 
 ---
 

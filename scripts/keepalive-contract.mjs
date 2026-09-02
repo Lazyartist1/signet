@@ -33,8 +33,7 @@ const CONTRACT_ID =
 const SIMULATION_SOURCE = 'GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF';
 
 const cliHandles = process.argv.slice(2).filter((h) => !h.startsWith('-'));
-const targetHandles =
-  cliHandles.length > 0 ? cliHandles : DEMO_PROFILES.map((p) => p.handle);
+const targetHandles = cliHandles.length > 0 ? cliHandles : DEMO_PROFILES.map((p) => p.handle);
 
 if (!CONTRACT_ID) {
   console.error('Error: Identity Registry Contract ID is not set.');
@@ -50,9 +49,8 @@ const { rpc, Account, BASE_FEE, Contract, Networks, TransactionBuilder, nativeTo
   await import('@stellar/stellar-sdk');
 
 const server = new rpc.Server(RPC_URL, { allowHttp: RPC_URL.startsWith('http://') });
-const networkPassphrase = RPC_URL.includes('public') || RPC_URL.includes('mainnet')
-  ? Networks.PUBLIC
-  : Networks.TESTNET;
+const networkPassphrase =
+  RPC_URL.includes('public') || RPC_URL.includes('mainnet') ? Networks.PUBLIC : Networks.TESTNET;
 
 const contract = new Contract(CONTRACT_ID);
 
@@ -73,10 +71,7 @@ for (const handle of targetHandles) {
 
     const sim = await server.simulateTransaction(tx);
 
-    if (
-      rpc.Api.isSimulationRestorePreamble(sim) ||
-      (typeof sim === 'object' && sim !== null && 'restorePreamble' in sim && sim.restorePreamble)
-    ) {
+    if (rpc.Api.isSimulationRestore(sim)) {
       console.warn(`[ARCHIVED] ${handle}: persistent entry archived. Requires RestoreFootprint.`);
       archived += 1;
     } else if (rpc.Api.isSimulationError(sim)) {
@@ -95,4 +90,6 @@ for (const handle of targetHandles) {
   }
 }
 
-console.log(`\nSweep summary: ${touched} live/bumped, ${archived} archived, ${unbound} unbound, ${errors} errors.\n`);
+console.log(
+  `\nSweep summary: ${touched} live/bumped, ${archived} archived, ${unbound} unbound, ${errors} errors.\n`,
+);
