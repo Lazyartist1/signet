@@ -6,10 +6,12 @@
 
 # Web Application (Next.js App Router & Marketing)
 /apps/web/ @blockchain-maxis
-/packages/ui/ @blockchain-maxis
 
 # Indexer Service (Horizon ingestion & attestation worker)
 /apps/indexer/ @blockchain-maxis
+
+# signet CLI (Go module, standalone — not part of the pnpm workspace)
+/cli/ @blockchain-maxis
 
 # Database Schema & Client (Prisma)
 /packages/db/ @blockchain-maxis
