@@ -48,7 +48,7 @@ test('normalizeNetwork accepts canonical networks and aliases (public, pubnet)',
 test('normalizeNetwork throws on invalid networks', () => {
   assert.throws(() => normalizeNetwork('moonnet'), /Unknown Stellar network: "moonnet"/);
   assert.throws(() => normalizeNetwork(''), /Unknown Stellar network: ""/);
-  assert.throws(() => normalizeNetwork('   '), /Unknown Stellar network: "   "/);
+  assert.throws(() => normalizeNetwork('   '), /Unknown Stellar network: " {3}"/);
   assert.throws(() => normalizeNetwork(123 as unknown as string), /Invalid network: expected string/);
 });
 
