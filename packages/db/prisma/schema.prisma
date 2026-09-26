@@ -103,11 +103,11 @@ model Contract {
   deployerPubkey  String
   deployedAt      DateTime
   deployTxHash    String
-  // No default on purpose: an implicit "mainnet" here is exactly how a
-  // testnet deployment (the only kind that exists today) could get silently
-  // mislabeled. Every writer (today,
-  // only apps/indexer/src/workers/deployment.ts) must pass the indexer's
-  // configured network explicitly.
+  // Allowed values: 'testnet' | 'mainnet' | 'futurenet' | 'local' — see NETWORKS
+  // in @signet/types and migration 20260926010000_normalise_contract_network
+  // which enforces CHECK (network IN ('testnet','mainnet','futurenet','local')).
+  // Every writer (today, apps/indexer/src/workers/deployment.ts) must pass
+  // the indexer's configured canonical network.
   network         String
   contractType    String?
   firstIndexedAt  DateTime @default(now())
