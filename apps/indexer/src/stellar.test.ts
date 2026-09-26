@@ -6,8 +6,9 @@ import { extractContractAddress } from './stellar.ts';
 const KNOWN_CONTRACT = 'CAAQCAIBAEAQCAIBAEAQCAIBAEAQCAIBAEAQCAIBAEAQCAIBAEAQC526';
 
 /**
- * Real v3 fixture from pre-protocol-23 testnet deployment.
- * Tx hash: 6b36e52e5a40b3c434cf9ec1914972d829399df899f8d55d28bca612e698ef73
+ * Synthetic v3 meta built with the SDK's XDR types (shape of a pre-protocol-23
+ * Soroban create-contract result). Not a recorded testnet transaction; swap in
+ * a recorded one once the @signet/fixtures package (#413) lands.
  */
 function buildV3Meta(contractAddress: string): string {
   const contractId = StrKey.decodeContract(contractAddress);
@@ -31,8 +32,10 @@ function buildV3Meta(contractAddress: string): string {
 }
 
 /**
- * Real v4 fixture from protocol 23+ testnet deployment.
- * Tx hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+ * Synthetic v4 meta built with the SDK's XDR types (shape of a protocol 23+
+ * Soroban result, `SorobanTransactionMetaV2` with a nullable return value).
+ * Not a recorded testnet transaction; swap in a recorded one once the
+ * @signet/fixtures package (#413) lands.
  */
 function buildV4Meta(returnValue: xdr.ScVal | null): string {
   const sorobanMeta = new xdr.SorobanTransactionMetaV2({
