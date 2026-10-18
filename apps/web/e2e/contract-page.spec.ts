@@ -82,7 +82,8 @@ test.describe('contract page @db', () => {
         'href',
         new RegExp(`/tx/${DEPLOY_TX_A}$`),
       );
-      await expect(header.getByText('1 Mar 2026')).toBeVisible();
+      // Scoped to <time>: the upgrade note (#454) also mentions this date.
+      await expect(header.locator('time', { hasText: '1 Mar 2026' })).toBeVisible();
       await expect(header).toContainText(`linked to @${FIXTURE_HANDLE}`);
     }
     // The first explorer link is the contract's own.
