@@ -131,7 +131,7 @@ export default async function OgImage({
             {shortAddress}
           </div>
           <div style={{ fontSize: 32, color: '#8a8779', marginTop: 12 }}>
-            @{handle}
+            {`@${handle}`}
           </div>
         </div>
 
